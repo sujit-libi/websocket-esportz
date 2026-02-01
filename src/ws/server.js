@@ -31,7 +31,7 @@ export function attachWebSocketServer(server) {
           const code = decision.reason.isRateLimit() ? 1013 : 1008; // 1013: Try Again Later, 1008: Policy Violation
           const reason = decision.reason.isRateLimit()
             ? 'Too Many Requests- Rate limit exceeded'
-            : 'Access denided by Arcjet';
+            : 'Access denied by Arcjet';
           socket.close(code, reason);
           return;
         }
