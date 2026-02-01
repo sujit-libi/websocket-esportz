@@ -18,8 +18,8 @@ matchesRouter.get('/', async (req, res) => {
 
   if (!parsed.success) {
     return res.status(400).json({
-      errors: `Invalid query: ${parsed.error.errors}`,
-      details: JSON.stringify(parsed.error),
+      errors: parsed.error.errors.map((e) => e.message),
+      details: parsed.error,
     });
   }
 
@@ -44,8 +44,8 @@ matchesRouter.post('/', async (req, res) => {
 
   if (!parsed.success) {
     return res.status(400).json({
-      errors: `Invalid payload: ${parsed.error.errors}`,
-      details: JSON.stringify(parsed.error),
+      errors: parsed.error.errors.map((e) => e.message),
+      details: parsed.error,
     });
   }
 
@@ -68,11 +68,9 @@ matchesRouter.post('/', async (req, res) => {
 
     res.status(201).json({ data: event });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: 'Failed to create match',
-        detail: error instanceof Error ? error.message : String(error),
-      });
+    res.status(500).json({
+      error: 'Failed to create match',
+      detail: error instanceof Error ? error.message : String(error),
+    });
   }
 });
