@@ -41,9 +41,6 @@ matchesRouter.get('/', async (req, res) => {
 
 matchesRouter.post('/', async (req, res) => {
   const parsed = createMatchSchema.safeParse(req.body);
-  const {
-    data: { startTime, endTime, homeScore, awayScore },
-  } = parsed;
 
   if (!parsed.success) {
     return res.status(400).json({
@@ -51,6 +48,10 @@ matchesRouter.post('/', async (req, res) => {
       details: JSON.stringify(parsed.error),
     });
   }
+
+  const {
+    data: { startTime, endTime, homeScore, awayScore },
+  } = parsed;
 
   try {
     const [event] = await db
@@ -69,6 +70,9 @@ matchesRouter.post('/', async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ error: 'Failed to create match', detail: JSON.stringify });
+      .json({
+        error: 'Failed to create match',
+        detail: error instanceof Error ? error.message : String(error),
+      });
   }
 });

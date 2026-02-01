@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-const isoRegex =
-  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
+// const isoRegex =
+//   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
 
-const isIsoDateString = (s) => typeof s === 'string' && isoRegex.test(s);
+// const isIsoDateString = (s) => typeof s === 'string' && isoRegex.test(s);
 
 // MATCH_STATUS constant (keys uppercase, values lowercase)
 export const MATCH_STATUS = {
@@ -14,13 +14,7 @@ export const MATCH_STATUS = {
 
 // Query schema for listing matches: optional limit (coerced positive int, max 100)
 export const listMatchesQuerySchema = z.object({
-  limit: z
-    .coerce
-    .number()
-    .int()
-    .positive()
-    .max(100)
-    .optional(),
+  limit: z.coerce.number().int().positive().max(100).optional(),
 });
 
 // Path param schema for matchId: required id as coerced positive integer
@@ -34,8 +28,10 @@ export const createMatchSchema = z
     sport: z.string().min(1, 'sport is required'),
     homeTeam: z.string().min(1, 'homeTeam is required'),
     awayTeam: z.string().min(1, 'awayTeam is required'),
-    startTime: z.string().refine(isIsoDateString, { message: 'startTime must be a valid ISO date string' }),
-    endTime: z.string().refine(isIsoDateString, { message: 'endTime must be a valid ISO date string' }),
+    // startTime: z.string().refine(isIsoDateString, { message: 'startTime must be a valid ISO date string' }),
+    // endTime: z.string().refine(isIsoDateString, { message: 'endTime must be a valid ISO date string' }),
+    startTime: z.iso.datetime({ offset: true }),
+    endTime: z.iso.datetime({ offset: true }),
     homeScore: z.coerce.number().int().min(0).optional(),
     awayScore: z.coerce.number().int().min(0).optional(),
   })
