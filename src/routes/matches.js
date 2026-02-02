@@ -40,9 +40,7 @@ matchesRouter.get('/', async (req, res) => {
 });
 
 matchesRouter.post('/', async (req, res) => {
-  console.log('Received request to create match:', req.body);
   const parsed = createMatchSchema.safeParse(req.body);
-  console.log(parsed);
 
   if (!parsed.success) {
     return res.status(400).json({

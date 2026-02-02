@@ -8,8 +8,6 @@ import { db } from '../db/db.js';
 import { commentary as commentaryTable } from '../db/schema.js';
 import { eq, desc } from 'drizzle-orm';
 
-// const router = express.Router();
-
 const MAX_LIMIT = 100;
 
 export const commentaryRouter = Router({ mergeParams: true });
@@ -74,7 +72,11 @@ commentaryRouter.post('/', async (req, res) => {
       .returning();
 
     if (res.app.locals.broadcastCommentary) {
-      res.app.locals.broadcastCommentary(inserted.matchId, inserted);
+      try {
+        res.app.locals.broadcastCommentary(inserted.matchId, inserted);
+      } catch (broadcastError) {
+        console.warn('WebSocket broadcast failed', broadcastError);
+      }
     }
 
     return res.status(201).json(inserted);
@@ -83,5 +85,3 @@ commentaryRouter.post('/', async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-// export const commentaryRouter = router;
